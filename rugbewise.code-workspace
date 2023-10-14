@@ -68,12 +68,16 @@
       "name": "📁 root"
     },
     {
-      "path": "packages/core",
-      "name": "📦 core"
+      "path": "stacks",
+      "name": "📚 stacks"
     },
     {
       "path": "packages/functions",
       "name": "🚀 functions"
+    },
+    {
+      "path": "packages/core",
+      "name": "📦 core"
     },
     {
       "path": "packages/contracts",

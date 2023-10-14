@@ -1,4 +1,4 @@
-import { Entity, EntityItem } from 'dynamodb-toolbox';
+/*import { Entity, EntityItem } from 'dynamodb-toolbox';
 import { GSI1_PK, GSI1_SK, PK, SK } from '../../../constants';
 import { table } from './table';
 
@@ -121,3 +121,4 @@ export type ResponseEntityType = Omit<
   upVotes: number;
   downVotes: number;
 };
+*/

@@ -28,15 +28,58 @@ export function API({ stack }: StackContext) {
     },
   });
 
-  const api = new Api(stack, 'api', {
-    defaults: {
-      function: {
-        bind: [table],
+  const eventsTable = new Table(stack, 'eventsTable', {
+    fields: {
+      aggregateId: 'string',
+      version: 'number',
+      eventStoreId: 'string',
+      timestamp: 'string',
+    },
+    primaryIndex: {
+      partitionKey: 'aggregateId',
+      sortKey: 'version',
+    },
+    globalIndexes: {
+      initialEvents: {
+        partitionKey: 'eventStoreId',
+        sortKey: 'timestamp',
+        projection: 'keys_only',
       },
     },
+  });
+
+  const api = new Api(stack, 'api', {
     routes: {
-      'GET /users': 'packages/functions/src/user.listUsers',
-      'POST /users': 'packages/functions/src/user.createUser',
+      'POST /users': {
+        function: {
+          handler: 'packages/functions/src/commands.createUser',
+          bind: [eventsTable],
+        },
+      },
+      'POST /questions': {
+        function: {
+          handler: 'packages/functions/src/commands.createQuestion',
+          bind: [eventsTable],
+        },
+      },
+      'POST /questions/{questionId}/answers': {
+        function: {
+          handler: 'packages/functions/src/commands.answerQuestion',
+          bind: [eventsTable],
+        },
+      },
+      'POST /questions/{questionId}/answers/{answerId}/upVote': {
+        function: {
+          handler: 'packages/functions/src/commands.upVoteAnswer',
+          bind: [eventsTable],
+        },
+      },
+      'POST /questions/{questionId}/answers/{answerId}/downVote': {
+        function: {
+          handler: 'packages/functions/src/commands.downVoteAnswer',
+          bind: [eventsTable],
+        },
+      },
     },
   });
 

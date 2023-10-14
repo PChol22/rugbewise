@@ -41,6 +41,12 @@ importers:
       '@aws-sdk/lib-dynamodb':
         specifier: ^3.428.0
         version: 3.428.0(@aws-sdk/client-dynamodb@3.428.0)
+      '@castore/core':
+        specifier: ^1.25.3
+        version: 1.25.3
+      '@castore/dynamodb-event-storage-adapter':
+        specifier: ^1.25.3
+        version: 1.25.3(@aws-sdk/client-dynamodb@3.428.0)(@castore/core@1.25.3)
       dynamodb-toolbox:
         specifier: ^0.8.5
         version: 0.8.5(@aws-sdk/client-dynamodb@3.428.0)(@aws-sdk/lib-dynamodb@3.428.0)
@@ -1622,6 +1628,13 @@ packages:
       '@babel/helper-plugin-utils': 7.22.5
     dev: true
 
+  /@babel/runtime@7.23.2:
+    resolution: {integrity: sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.0
+    dev: false
+
   /@babel/template@7.22.15:
     resolution: {integrity: sha512-QPErUVm4uyJa60rkI73qneDacvdvzxshT3kksGqlGWYdOTIUOwJ7RDUL8sGqslY1uXWSL6xMFKEXDS3ox2uF0w==}
     engines: {node: '>=6.9.0'}
@@ -1661,6 +1674,24 @@ packages:
   /@balena/dockerignore@1.0.2:
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
     dev: true
+
+  /@castore/core@1.25.3:
+    resolution: {integrity: sha512-Nr9oLymsMlhtW7mid/ImmtFT0ySSCZJMNG1mIILUtVHWoG4OwAiyZvZw4vQv0pyDMqdsyy3kbIJTl2/YAjm5MQ==}
+    dependencies:
+      '@babel/runtime': 7.23.2
+      ts-toolbelt: 9.6.0
+    dev: false
+
+  /@castore/dynamodb-event-storage-adapter@1.25.3(@aws-sdk/client-dynamodb@3.428.0)(@castore/core@1.25.3):
+    resolution: {integrity: sha512-qJ+cWBbzganHVnfPDe1tN779hTF1j1YtAIj6sgSUdaXc/Xmipqr4TvWl5hotY2NHc0uIqQbteTNbEvAckA0fmg==}
+    peerDependencies:
+      '@aws-sdk/client-dynamodb': ^3.0.0
+      '@castore/core': ^1.0.0
+    dependencies:
+      '@aws-sdk/client-dynamodb': 3.428.0
+      '@aws-sdk/util-dynamodb': 3.428.0(@aws-sdk/client-dynamodb@3.428.0)
+      '@castore/core': 1.25.3
+    dev: false
 
   /@envelop/core@3.0.6:
     resolution: {integrity: sha512-06t1xCPXq6QFN7W1JUEf68aCwYN0OUDNAIoJe7bAqhaoa2vn7NCcuX1VHkJ/OWpmElUgCsRO6RiBbIru1in0Ig==}
@@ -5847,6 +5878,10 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /regenerator-runtime@0.14.0:
+    resolution: {integrity: sha512-srw17NI0TUWHuGa5CFGGmhfNIeja30WMBfbslPNhf6JrqQlLN5gcrvig1oqPxiVaXb0oW0XRKtH6Nngs5lKCIA==}
+    dev: false
 
   /reinterval@1.1.0:
     resolution: {integrity: sha512-QIRet3SYrGp0HUHO88jVskiG6seqUGC5iAG7AwI/BV4ypGcuqk9Du6YQBUOUqm9c8pw1eyLoIaONifRua1lsEQ==}
