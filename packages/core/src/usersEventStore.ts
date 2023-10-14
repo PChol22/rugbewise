@@ -5,7 +5,8 @@ import {
   EventType,
   Reducer,
 } from '@castore/core';
-import { eventsStorageAdapter } from './table';
+import { eventsStorageAdapter } from './eventsTable';
+import { USERS_EVENT_STORE_ID } from '../../../constants';
 
 export interface UserAggregate extends Aggregate {
   upVotedAnswers: string[];
@@ -72,7 +73,7 @@ const reduce: Reducer<UserAggregate, EventsTypes> = (aggregate, event) => {
 };
 
 export const usersEventStore = new EventStore({
-  eventStoreId: 'Users',
+  eventStoreId: USERS_EVENT_STORE_ID,
   eventStoreEvents: userEvents,
   storageAdapter: eventsStorageAdapter,
   reduce,

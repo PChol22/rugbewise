@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.428.0",
+    "@aws-sdk/client-eventbridge": "^3.428.0",
     "@aws-sdk/lib-dynamodb": "^3.428.0",
     "@castore/core": "^1.25.3",
     "@castore/dynamodb-event-storage-adapter": "^1.25.3",
+    "@castore/event-bridge-message-bus-adapter": "^1.25.3",
     "dynamodb-toolbox": "^0.8.5",
     "zod": "^3.22.4"
   }

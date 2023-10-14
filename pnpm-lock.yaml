@@ -38,6 +38,9 @@ importers:
       '@aws-sdk/client-dynamodb':
         specifier: ^3.428.0
         version: 3.428.0
+      '@aws-sdk/client-eventbridge':
+        specifier: ^3.428.0
+        version: 3.428.0
       '@aws-sdk/lib-dynamodb':
         specifier: ^3.428.0
         version: 3.428.0(@aws-sdk/client-dynamodb@3.428.0)
@@ -47,6 +50,9 @@ importers:
       '@castore/dynamodb-event-storage-adapter':
         specifier: ^1.25.3
         version: 1.25.3(@aws-sdk/client-dynamodb@3.428.0)(@castore/core@1.25.3)
+      '@castore/event-bridge-message-bus-adapter':
+        specifier: ^1.25.3
+        version: 1.25.3(@aws-sdk/client-eventbridge@3.428.0)(@castore/core@1.25.3)
       dynamodb-toolbox:
         specifier: ^0.8.5
         version: 0.8.5(@aws-sdk/client-dynamodb@3.428.0)(@aws-sdk/lib-dynamodb@3.428.0)
@@ -544,7 +550,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: true
 
   /@aws-sdk/client-iam@3.428.0:
     resolution: {integrity: sha512-5wkf79X29XilS8E067xi57wGr5mm3zbTHmCWNmiNp+DhjkS+4IfaPDJBntqOJ23cc2nfoClLXCgLeEIqwLAXEw==}
@@ -1314,7 +1319,6 @@ packages:
       '@smithy/signature-v4': 2.0.11
       '@smithy/types': 2.3.5
       tslib: 2.6.2
-    dev: true
 
   /@aws-sdk/smithy-client@3.374.0:
     resolution: {integrity: sha512-YQBdO/Nv5EXBg/qfMF4GgYYLNN3Y/06MyuVBYILC1TKAnMoLy2FV0VOYyediagepAcWPdJqyUq4MCNNBy0CPRg==}
@@ -1691,6 +1695,18 @@ packages:
       '@aws-sdk/client-dynamodb': 3.428.0
       '@aws-sdk/util-dynamodb': 3.428.0(@aws-sdk/client-dynamodb@3.428.0)
       '@castore/core': 1.25.3
+    dev: false
+
+  /@castore/event-bridge-message-bus-adapter@1.25.3(@aws-sdk/client-eventbridge@3.428.0)(@castore/core@1.25.3):
+    resolution: {integrity: sha512-PpiQx098N9XetF9iSE96A8AybwrZM6iQCYRmFRINwH/j2gDmo6J9UwV+lUfKJOCSKUdiPz1u7ANpd9bbYJUp/Q==}
+    peerDependencies:
+      '@aws-sdk/client-eventbridge': ^3.0.0
+      '@castore/core': ^1.0.0
+    dependencies:
+      '@aws-sdk/client-eventbridge': 3.428.0
+      '@castore/core': 1.25.3
+      '@types/aws-lambda': 8.10.124
+      lodash.chunk: 4.2.0
     dev: false
 
   /@envelop/core@3.0.6:
@@ -2946,7 +2962,6 @@ packages:
 
   /@types/aws-lambda@8.10.124:
     resolution: {integrity: sha512-PHqK0SuAkFS3tZjceqRXecxxrWIN3VqTicuialtK2wZmvBy7H9WGc3u3+wOgaZB7N8SpSXDpWk9qa7eorpTStg==}
-    dev: true
 
   /@types/chai-subset@1.3.3:
     resolution: {integrity: sha512-frBecisrNGz+F4T6bcc+NLeolfiojh5FxW2klu669+8BARtyQv2C/GkNW6FUodVe4BroGMP/wER/YDGc7rEllw==}
@@ -5181,6 +5196,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash.chunk@4.2.0:
+    resolution: {integrity: sha512-ZzydJKfUHJwHa+hF5X66zLFCBrWn5GeF28OHEr4WVWtNDXlQ/IjWKPBiikqKo2ne0+v6JgCgJ0GzJp8k8bHC7w==}
+    dev: false
 
   /lodash.defaults@4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}

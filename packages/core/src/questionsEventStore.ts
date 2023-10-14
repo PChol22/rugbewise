@@ -5,7 +5,9 @@ import {
   EventType,
   Reducer,
 } from '@castore/core';
-import { eventsStorageAdapter } from './table';
+import { eventsStorageAdapter } from './eventsTable';
+
+import { QUESTIONS_EVENT_STORE_ID } from '../../../constants';
 
 export interface QuestionAggregate extends Aggregate {
   userId: string;
@@ -117,7 +119,7 @@ const reduce: Reducer<QuestionAggregate, EventsTypes> = (aggregate, event) => {
 };
 
 export const questionsEventStore = new EventStore({
-  eventStoreId: 'Questions',
+  eventStoreId: QUESTIONS_EVENT_STORE_ID,
   eventStoreEvents: questionEvents,
   storageAdapter: eventsStorageAdapter,
   reduce,

@@ -1,7 +1,16 @@
-import { StackContext, Api, StaticSite, Table } from 'sst/constructs';
+import { StackContext, Api, StaticSite, Table, EventBus } from 'sst/constructs';
 import { BillingMode } from 'aws-cdk-lib/aws-dynamodb';
-import { GSI1, GSI1_PK, GSI1_SK, PK, SK } from '../constants';
+import {
+  GSI1,
+  GSI1_PK,
+  GSI1_SK,
+  PK,
+  QUESTIONS_EVENT_STORE_ID,
+  SK,
+  USERS_EVENT_STORE_ID,
+} from '../constants';
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
+import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 
 export function API({ stack }: StackContext) {
   const table = new Table(stack, 'table', {
@@ -28,6 +37,32 @@ export function API({ stack }: StackContext) {
     },
   });
 
+  const eventBus = new EventBus(stack, 'eventBus', {});
+  eventBus.addRules(stack, {
+    usersProjection: {
+      targets: {
+        usersProjection: {
+          function: {
+            handler: 'packages/functions/src/projection.usersProjection',
+            bind: [table],
+          },
+        },
+      },
+      pattern: { source: [USERS_EVENT_STORE_ID] },
+    },
+    questionsProjection: {
+      targets: {
+        questionsProjection: {
+          function: {
+            handler: 'packages/functions/src/projection.questionsProjection',
+            bind: [table],
+          },
+        },
+      },
+      pattern: { source: [QUESTIONS_EVENT_STORE_ID] },
+    },
+  });
+
   const eventsTable = new Table(stack, 'eventsTable', {
     fields: {
       aggregateId: 'string',
@@ -44,6 +79,22 @@ export function API({ stack }: StackContext) {
         partitionKey: 'eventStoreId',
         sortKey: 'timestamp',
         projection: 'keys_only',
+      },
+    },
+    stream: 'new_image',
+  });
+
+  eventsTable.addConsumers(stack, {
+    eventsFanout: {
+      function: {
+        handler: 'packages/functions/src/eventsFanout.handler',
+        bind: [eventsTable, eventBus],
+      },
+      cdk: {
+        eventSource: {
+          batchSize: 10,
+          startingPosition: StartingPosition.LATEST,
+        },
       },
     },
   });

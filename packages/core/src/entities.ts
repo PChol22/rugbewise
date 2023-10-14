@@ -1,6 +1,11 @@
-/*import { Entity, EntityItem } from 'dynamodb-toolbox';
+import { Entity, EntityItem } from 'dynamodb-toolbox';
 import { GSI1_PK, GSI1_SK, PK, SK } from '../../../constants';
-import { table } from './table';
+import { table } from './projectionsTable';
+
+type PutItemEntityType<T extends EntityItem<Entity>> = Omit<
+  T,
+  'created' | 'modified' | 'entity'
+>;
 
 export const UserEntityName = 'User';
 
@@ -21,104 +26,90 @@ export const UserEntity = new Entity({
     },
     username: { type: 'string', required: true },
     userId: { type: 'string', required: true },
-    score: { type: 'number', default: 0 },
+    score: { type: 'number', required: true },
     email: { type: 'string' },
   },
 });
 
-export type UserEntityType = Omit<EntityItem<typeof UserEntity>, 'score'> & {
-  score: number;
-};
+export type UserEntityType = EntityItem<typeof UserEntity>;
+export type PutUserEntityType = PutItemEntityType<UserEntityType>;
 
-export const QuestionEntityName = 'Question';
+export const QuestionForListEntityName = 'QuestionForList';
 
-export const QuestionEntity = new Entity({
+export const QuestionForListEntity = new Entity({
   table,
-  name: QuestionEntityName,
+  name: QuestionForListEntityName,
   attributes: {
     [PK]: {
       partitionKey: true,
-      default: QuestionEntityName,
+      default: QuestionForListEntityName,
       type: 'string',
       hidden: true,
     },
     [SK]: {
       sortKey: true,
-      default: ({ questionId }: { questionId: string }) => questionId,
-      hidden: true,
-    },
-    [GSI1_PK]: {
-      default: QuestionEntityName,
-      type: 'string',
-      hidden: true,
-    },
-    [GSI1_SK]: {
-      default: ({ userId }: { userId: string }) => userId,
-      type: 'string',
+      default: ({
+        questionId,
+        userId,
+      }: {
+        questionId: string;
+        userId: string;
+      }) => `${userId}#${questionId}`,
       hidden: true,
     },
     questionId: { type: 'string', required: true },
     userId: { type: 'string', required: true },
     questionText: { type: 'string', required: true },
-    game: { type: 'map', required: true },
-    gameTime: { type: 'string', required: true },
-    filename: { type: 'string' },
-    wasUserNotified: { type: 'boolean', default: false },
+    // game: { type: 'map', required: true },
+    // gameTime: { type: 'string', required: true },
   },
 });
 
-export type QuestionEntityType = Omit<
-  EntityItem<typeof QuestionEntity>,
-  'game'
-> & {
-  game: {
-    team1: string;
-    team2: string;
-    date: string;
-  };
-};
+export type QuestionForListEntityType = EntityItem<
+  typeof QuestionForListEntity
+>;
+export type PutQuestionForListEntityType =
+  PutItemEntityType<QuestionForListEntityType>;
 
-export const ResponseEntityName = 'Response';
+export const QuestionForDetailsEntityName = 'QuestionForDetails';
 
-export const ResponseEntity = new Entity({
+export const QuestionForDetailsEntity = new Entity({
   table,
-  name: ResponseEntityName,
+  name: QuestionForDetailsEntityName,
   attributes: {
     [PK]: {
       partitionKey: true,
-      default: ResponseEntityName,
+      default: QuestionForDetailsEntityName,
       type: 'string',
       hidden: true,
     },
     [SK]: {
       sortKey: true,
-      default: ({ responseId }: { responseId: string }) => responseId,
-      hidden: true,
-    },
-    [GSI1_PK]: {
-      default: ResponseEntityName,
-      type: 'string',
-      hidden: true,
-    },
-    [GSI1_SK]: {
       default: ({ questionId }: { questionId: string }) => questionId,
-      type: 'string',
       hidden: true,
     },
     questionId: { type: 'string', required: true },
-    responseId: { type: 'string', required: true },
     userId: { type: 'string', required: true },
-    responseText: { type: 'string', required: true },
-    upVotes: { type: 'number', default: 0 },
-    downVotes: { type: 'number', default: 0 },
+    questionText: { type: 'string', required: true },
+    // game: { type: 'map', required: true },
+    // gameTime: { type: 'string', required: true },
+    // filename: { type: 'string' },
+    answers: { type: 'map', required: true },
   },
 });
 
 export type ResponseEntityType = Omit<
-  EntityItem<typeof ResponseEntity>,
-  'upVotes' | 'downVotes'
+  EntityItem<typeof QuestionForDetailsEntity>,
+  'answers'
 > & {
-  upVotes: number;
-  downVotes: number;
+  answers: {
+    [answerId: string]: {
+      userId: string;
+      answerText: string;
+      upVotes: string[];
+      downVotes: string[];
+    };
+  };
 };
-*/
+export type PutQuestionForDetailsEntityType =
+  PutItemEntityType<ResponseEntityType>;
