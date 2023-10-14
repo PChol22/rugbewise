@@ -24,6 +24,15 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
+  packages/contracts:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.8.6
+        version: 20.8.6
+      vitest:
+        specifier: ^0.34.6
+        version: 0.34.6
+
   packages/core:
     dependencies:
       '@aws-sdk/client-dynamodb':

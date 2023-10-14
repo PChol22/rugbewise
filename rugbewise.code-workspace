@@ -76,6 +76,10 @@
       "name": "🚀 functions"
     },
     {
+      "path": "packages/contracts",
+      "name": "📝 contracts"
+    },
+    {
       "path": "packages/frontend",
       "name": "🎨 front"
     }

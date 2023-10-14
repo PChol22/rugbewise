@@ -4,9 +4,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "baseUrl": ".",
-    "paths": {
-      "@rugbewise/core/*": ["../core/src/*"],
-      "@rugbewise/contracts/*": ["../contracts/src/*"]
-    }
+    "paths": {}
   }
 }

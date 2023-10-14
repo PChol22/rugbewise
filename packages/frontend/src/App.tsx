@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
+import { CreateUserInput, ListUsersOutput } from '@rugbewise/contracts/user';
 
 export const App = () => {
-  const [users, setUsers] = useState<{ username: string; SK: string }[]>([]);
+  const [users, setUsers] = useState<{ username: string; userId: string }[]>(
+    [],
+  );
   const [username, setUsername] = useState('');
 
   const createUser = async () => {
+    const body: CreateUserInput = {
+      username,
+    };
     await fetch(import.meta.env.VITE_APP_API_URL + '/users', {
       method: 'POST',
-      body: JSON.stringify({ username }),
+      body: JSON.stringify(body),
     });
     setUsername('');
     await fetchUsers();
@@ -15,8 +21,8 @@ export const App = () => {
 
   const fetchUsers = async () => {
     const response = await fetch(import.meta.env.VITE_APP_API_URL + '/users');
-    const data = await response.json();
-    setUsers(data);
+    const { users } = (await response.json()) as ListUsersOutput;
+    setUsers(users);
   };
 
   useEffect(() => {
@@ -32,10 +38,10 @@ export const App = () => {
         onChange={e => setUsername(e.target.value)}
       />
       <button onClick={createUser}>Add User</button>
-      {users.map(user => (
-        <div key={user.SK}>
-          <p>{user.username}</p>
-          <p>{user.SK}</p>
+      {users.map(({ userId, username }) => (
+        <div key={userId}>
+          <p>{username}</p>
+          <p>{userId}</p>
         </div>
       ))}
     </div>

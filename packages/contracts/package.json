@@ -1,0 +1,13 @@
+{
+  "name": "@rugbewise/contracts",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "sst bind vitest",
+    "typecheck": "tsc -noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.6",
+    "vitest": "^0.34.6"
+  }
+}
