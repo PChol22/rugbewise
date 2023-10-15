@@ -125,7 +125,7 @@ export const Backend = ({ stack }: StackContext) => {
       'POST /users': {
         function: {
           handler: 'packages/functions/src/commands.createUser',
-          bind: [eventsTable],
+          bind: [eventsTable, projectionsTable],
         },
       },
       'POST /questions': {
@@ -137,24 +137,42 @@ export const Backend = ({ stack }: StackContext) => {
       'POST /questions/{questionId}/answers': {
         function: {
           handler: 'packages/functions/src/commands.answerQuestion',
-          bind: [eventsTable, editQuestionQueue],
+          bind: [editQuestionQueue],
         },
       },
       'POST /questions/{questionId}/answers/{answerId}/upVote': {
         function: {
           handler: 'packages/functions/src/commands.upVoteAnswer',
-          bind: [eventsTable, editQuestionQueue],
+          bind: [editQuestionQueue],
         },
       },
       'POST /questions/{questionId}/answers/{answerId}/downVote': {
         function: {
           handler: 'packages/functions/src/commands.downVoteAnswer',
-          bind: [eventsTable, editQuestionQueue],
+          bind: [editQuestionQueue],
         },
       },
       'GET /questions': {
         function: {
           handler: 'packages/functions/src/entities.listQuestions',
+          bind: [projectionsTable],
+        },
+      },
+      'GET /questions/{questionId}': {
+        function: {
+          handler: 'packages/functions/src/entities.getQuestion',
+          bind: [projectionsTable],
+        },
+      },
+      'GET /users': {
+        function: {
+          handler: 'packages/functions/src/entities.listUsers',
+          bind: [projectionsTable],
+        },
+      },
+      'POST /login': {
+        function: {
+          handler: 'packages/functions/src/login.login',
           bind: [projectionsTable],
         },
       },

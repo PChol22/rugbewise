@@ -24,6 +24,15 @@ export const UserEntity = new Entity({
       default: ({ userId }: { userId: string }) => userId,
       hidden: true,
     },
+    [GSI1_PK]: {
+      default: UserEntityName,
+      type: 'string',
+      hidden: true,
+    },
+    [GSI1_SK]: {
+      default: ({ username }: { username: string }) => username,
+      hidden: true,
+    },
     username: { type: 'string', required: true },
     userId: { type: 'string', required: true },
     score: { type: 'number', required: true },
@@ -98,7 +107,7 @@ export const QuestionForDetailsEntity = new Entity({
   },
 });
 
-export type ResponseEntityType = Omit<
+export type QuestionForDetailsEntityType = Omit<
   EntityItem<typeof QuestionForDetailsEntity>,
   'answers'
 > & {
@@ -112,4 +121,4 @@ export type ResponseEntityType = Omit<
   };
 };
 export type PutQuestionForDetailsEntityType =
-  PutItemEntityType<ResponseEntityType>;
+  PutItemEntityType<QuestionForDetailsEntityType>;
