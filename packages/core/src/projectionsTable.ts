@@ -8,7 +8,7 @@ const dynamoDbClient = new DynamoDBClient({});
 const DocumentClient = DynamoDBDocumentClient.from(dynamoDbClient);
 
 export const table = new DdbTable({
-  name: Table.table.tableName,
+  name: Table.projectionsTable.tableName,
   partitionKey: PK,
   sortKey: SK,
   DocumentClient,

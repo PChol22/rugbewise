@@ -12,8 +12,8 @@ import {
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 
-export function API({ stack }: StackContext) {
-  const table = new Table(stack, 'table', {
+export const Backend = ({ stack }: StackContext) => {
+  const projectionsTable = new Table(stack, 'projectionsTable', {
     fields: {
       [PK]: 'string',
       [SK]: 'string',
@@ -44,7 +44,7 @@ export function API({ stack }: StackContext) {
         usersProjection: {
           function: {
             handler: 'packages/functions/src/projection.usersProjection',
-            bind: [table],
+            bind: [projectionsTable],
           },
         },
       },
@@ -55,7 +55,7 @@ export function API({ stack }: StackContext) {
         questionsProjection: {
           function: {
             handler: 'packages/functions/src/projection.questionsProjection',
-            bind: [table],
+            bind: [projectionsTable],
           },
         },
       },
@@ -131,6 +131,12 @@ export function API({ stack }: StackContext) {
           bind: [eventsTable],
         },
       },
+      'GET /questions': {
+        function: {
+          handler: 'packages/functions/src/entities.listQuestions',
+          bind: [projectionsTable],
+        },
+      },
     },
   });
 
@@ -158,4 +164,4 @@ export function API({ stack }: StackContext) {
     ApiEndpoint: api.url,
     FrontendUrl: web.customDomainUrl,
   });
-}
+};
