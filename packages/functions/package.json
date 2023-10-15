@@ -7,9 +7,12 @@
     "typecheck": "tsc -noEmit"
   },
   "devDependencies": {
-    "@types/node": "^20.8.6",
     "@types/aws-lambda": "^8.10.124",
-    "vitest": "^0.34.6",
-    "sst": "^2.29.2"
+    "@types/node": "^20.8.6",
+    "sst": "^2.29.2",
+    "vitest": "^0.34.6"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.428.0"
   }
 }

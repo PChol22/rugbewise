@@ -8,6 +8,7 @@ import {
   upVoteAnswerCommand,
 } from '@rugbewise/core/commands';
 import { usersEventStore } from '@rugbewise/core/usersEventStore';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 
 import {
   AnswerQuestionPathParameters,
@@ -25,8 +26,25 @@ import {
   UpVoteAnswerOutput,
 } from '@rugbewise/contracts/commands';
 import { questionsEventStore } from '@rugbewise/core/questionsEventStore';
+import { SQSEvent } from 'aws-lambda';
+import { Queue } from 'sst/node/queue';
 
 const generateUuid = () => randomUUID();
+const sqsClient = new SQSClient({});
+
+type QueueEvent =
+  | {
+      type: 'QuestionAnswered';
+      payload: Parameters<typeof answerQuestionCommand.handler>[0];
+    }
+  | {
+      type: 'AnswerUpVoted';
+      payload: Parameters<typeof upVoteAnswerCommand.handler>[0];
+    }
+  | {
+      type: 'AnswerDownVoted';
+      payload: Parameters<typeof downVoteAnswerCommand.handler>[0];
+    };
 
 export const createUser = ApiHandler(async _evt => {
   const { username } = JSON.parse(_evt.body as string) as CreateUserInput;
@@ -78,16 +96,26 @@ export const answerQuestion = ApiHandler(async _evt => {
     _evt.body as string,
   ) as AnswerQuestionInput;
 
-  const { answerId } = await answerQuestionCommand.handler(
-    { questionId, userId, answerText },
-    [questionsEventStore, usersEventStore],
-    {
-      generateUuid,
+  const queuePayload: QueueEvent = {
+    type: 'QuestionAnswered',
+    payload: {
+      userId,
+      answerText,
+      questionId,
     },
+  };
+
+  await sqsClient.send(
+    new SendMessageCommand({
+      MessageGroupId: questionId,
+      QueueUrl: Queue.editQuestionQueue.queueUrl,
+      MessageBody: JSON.stringify(queuePayload),
+      MessageDeduplicationId: generateUuid(),
+    }),
   );
 
   const response: AnswerQuestionOutput = {
-    answerId,
+    message: 'Question answered',
   };
 
   return {
@@ -101,10 +129,23 @@ export const upVoteAnswer = ApiHandler(async _evt => {
     _evt.pathParameters as UpVoteAnswerPathParameters;
   const { userId } = JSON.parse(_evt.body as string) as UpVoteAnswerInput;
 
-  await upVoteAnswerCommand.handler({ questionId, userId, answerId }, [
-    questionsEventStore,
-    usersEventStore,
-  ]);
+  const queuePayload: QueueEvent = {
+    type: 'AnswerUpVoted',
+    payload: {
+      userId,
+      answerId,
+      questionId,
+    },
+  };
+
+  await sqsClient.send(
+    new SendMessageCommand({
+      MessageGroupId: questionId,
+      QueueUrl: Queue.editQuestionQueue.queueUrl,
+      MessageBody: JSON.stringify(queuePayload),
+      MessageDeduplicationId: generateUuid(),
+    }),
+  );
 
   const response: UpVoteAnswerOutput = {
     message: 'UpVote successful',
@@ -121,10 +162,23 @@ export const downVoteAnswer = ApiHandler(async _evt => {
     _evt.pathParameters as DownVoteAnswerPathParameters;
   const { userId } = JSON.parse(_evt.body as string) as DownVoteAnswerInput;
 
-  await downVoteAnswerCommand.handler({ questionId, userId, answerId }, [
-    questionsEventStore,
-    usersEventStore,
-  ]);
+  const queuePayload: QueueEvent = {
+    type: 'AnswerDownVoted',
+    payload: {
+      userId,
+      answerId,
+      questionId,
+    },
+  };
+
+  await sqsClient.send(
+    new SendMessageCommand({
+      MessageGroupId: questionId,
+      QueueUrl: Queue.editQuestionQueue.queueUrl,
+      MessageBody: JSON.stringify(queuePayload),
+      MessageDeduplicationId: generateUuid(),
+    }),
+  );
 
   const response: DownVoteAnswerOutput = {
     message: 'DownVote successful',
@@ -135,3 +189,40 @@ export const downVoteAnswer = ApiHandler(async _evt => {
     body: JSON.stringify(response),
   };
 });
+
+export const editQuestion = async (evt: SQSEvent) => {
+  const { Records } = evt;
+
+  await Promise.all(
+    Records.map(async ({ body }) => {
+      const parsedBody = JSON.parse(body) as QueueEvent;
+
+      switch (parsedBody.type) {
+        case 'QuestionAnswered': {
+          return await answerQuestionCommand.handler(
+            parsedBody.payload,
+            [questionsEventStore, usersEventStore],
+            {
+              generateUuid,
+            },
+          );
+        }
+        case 'AnswerUpVoted': {
+          return await upVoteAnswerCommand.handler(parsedBody.payload, [
+            questionsEventStore,
+            usersEventStore,
+          ]);
+        }
+        case 'AnswerDownVoted': {
+          return await downVoteAnswerCommand.handler(parsedBody.payload, [
+            questionsEventStore,
+            usersEventStore,
+          ]);
+        }
+        default:
+          const notExhaustive: never = parsedBody;
+          throw new Error(`Unhandled event type: ${notExhaustive}`);
+      }
+    }),
+  );
+};

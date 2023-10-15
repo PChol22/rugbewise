@@ -1,4 +1,11 @@
-import { StackContext, Api, StaticSite, Table, EventBus } from 'sst/constructs';
+import {
+  StackContext,
+  Api,
+  StaticSite,
+  Table,
+  EventBus,
+  Queue,
+} from 'sst/constructs';
 import { BillingMode } from 'aws-cdk-lib/aws-dynamodb';
 import {
   GSI1,
@@ -99,6 +106,20 @@ export const Backend = ({ stack }: StackContext) => {
     },
   });
 
+  const editQuestionQueue = new Queue(stack, 'editQuestionQueue', {
+    consumer: {
+      function: {
+        handler: 'packages/functions/src/commands.editQuestion',
+        bind: [eventsTable],
+      },
+    },
+    cdk: {
+      queue: {
+        fifo: true,
+      },
+    },
+  });
+
   const api = new Api(stack, 'api', {
     routes: {
       'POST /users': {
@@ -116,19 +137,19 @@ export const Backend = ({ stack }: StackContext) => {
       'POST /questions/{questionId}/answers': {
         function: {
           handler: 'packages/functions/src/commands.answerQuestion',
-          bind: [eventsTable],
+          bind: [eventsTable, editQuestionQueue],
         },
       },
       'POST /questions/{questionId}/answers/{answerId}/upVote': {
         function: {
           handler: 'packages/functions/src/commands.upVoteAnswer',
-          bind: [eventsTable],
+          bind: [eventsTable, editQuestionQueue],
         },
       },
       'POST /questions/{questionId}/answers/{answerId}/downVote': {
         function: {
           handler: 'packages/functions/src/commands.downVoteAnswer',
-          bind: [eventsTable],
+          bind: [eventsTable, editQuestionQueue],
         },
       },
       'GET /questions': {
