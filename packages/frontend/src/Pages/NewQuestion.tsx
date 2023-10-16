@@ -3,8 +3,10 @@ import {
   CreateQuestionOutput,
 } from '@rugbewise/contracts/commands';
 import { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useConnectedUser } from '../connectedUserContext';
+import { ListQuestionsOutput } from '@rugbewise/contracts/entities';
+import { useNavigate } from 'react-router-dom';
 
 const GAMES = ['🇫🇷 vs 🇿🇦', '🏴󠁧󠁢󠁷󠁬󠁳󠁿 vs 🇦🇷', '🇳🇿 vs 🇮🇪', '🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇫🇯'];
 
@@ -12,6 +14,9 @@ export const NewQuestion = () => {
   const [questionText, setQuestionText] = useState('');
   const [game, setGame] = useState(GAMES[0]);
   const { userId } = useConnectedUser();
+
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { mutate } = useMutation<
     CreateQuestionOutput,
@@ -38,8 +43,20 @@ export const NewQuestion = () => {
       return data;
     },
     {
-      onSuccess: ({ questionId }) => {
-        console.log(questionId);
+      onSuccess: async ({ questionId }) => {
+        const newQuestion: ListQuestionsOutput['questions'][number] = {
+          questionId,
+          questionText,
+          userId,
+        };
+
+        await queryClient.cancelQueries({ queryKey: 'questions' });
+        queryClient.setQueryData<ListQuestionsOutput['questions']>(
+          'questions',
+          old => [newQuestion, ...(old ?? [])],
+        );
+
+        navigate('/');
       },
     },
   );

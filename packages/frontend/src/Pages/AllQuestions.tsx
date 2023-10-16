@@ -8,14 +8,18 @@ export const AllQuestions = () => {
     data: questions,
     isLoading,
     isError,
-  } = useQuery('questions', async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/questions`,
-    );
-    const { questions } = (await response.json()) as ListQuestionsOutput;
+  } = useQuery(
+    'questions',
+    async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/questions`,
+      );
+      const { questions } = (await response.json()) as ListQuestionsOutput;
 
-    return questions;
-  });
+      return questions;
+    },
+    { staleTime: 1000 * 60 },
+  );
   const navigate = useNavigate();
 
   if (isError) return <Error />;
@@ -27,7 +31,7 @@ export const AllQuestions = () => {
         <h1 className="text-3xl text-palette-primary">All Questions</h1>
         <button
           className="btn btn-primary bg-palette-secondary px-2 py-1 text-white rounded-sm"
-          onClick={() => navigate('newQuestion')}
+          onClick={() => navigate('/newQuestion')}
         >
           Ask a question
         </button>
