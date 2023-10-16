@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useConnectedUser } from '../connectedUserContext';
+import { useNavigate } from 'react-router-dom';
 
 export const Menu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { username } = useConnectedUser();
+  const navigate = useNavigate();
 
   return (
     <div className="fixed bottom-4 right-4 flex flex-col gap-2">
@@ -12,21 +14,21 @@ export const Menu = () => {
           <p className="mb-2 text-lg text-palette-secondary font-semibold">
             Hello {username}!
           </p>
+          <button
+            className="flex items-center mb-2"
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            <span className="mr-2">👀</span> All Questions
+          </button>
           <button className="flex items-center mb-2">
             <span className="mr-2">❓</span> My Questions
           </button>
           <button
             className="flex items-center mb-2"
             onClick={() => {
-              window.location.href = '/allQuestions';
-            }}
-          >
-            <span className="mr-2">👀</span> All Questions
-          </button>
-          <button
-            className="flex items-center mb-2"
-            onClick={() => {
-              window.location.href = '/leaderboard';
+              navigate('/leaderboard');
             }}
           >
             <span className="mr-2">🏆</span> Leaderboard

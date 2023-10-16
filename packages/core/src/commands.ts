@@ -36,12 +36,15 @@ export const answerQuestionCommand = new Command({
   commandId: 'AnswerQuestion',
   requiredEventStores: tuple(questionsEventStore, usersEventStore),
   handler: async (
-    commandInput: { questionId: string; answerText: string; userId: string },
+    commandInput: {
+      questionId: string;
+      answerText: string;
+      userId: string;
+      answerId: string;
+    },
     [questionsEventStore, usersEventStore],
-    { generateUuid }: { generateUuid: () => string },
   ): Promise<{ answerId: string }> => {
-    const { questionId, answerText, userId } = commandInput;
-    const answerId = generateUuid();
+    const { questionId, answerText, userId, answerId } = commandInput;
 
     const [{ aggregate: questionAggregate }, { aggregate: userAggregate }] =
       await Promise.all([

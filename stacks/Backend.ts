@@ -106,6 +106,14 @@ export const Backend = ({ stack }: StackContext) => {
     },
   });
 
+  const deadLetterQueue = new Queue(stack, 'deadLetterQueue', {
+    cdk: {
+      queue: {
+        fifo: true,
+      },
+    },
+  });
+
   const editQuestionQueue = new Queue(stack, 'editQuestionQueue', {
     consumer: {
       function: {
@@ -116,6 +124,10 @@ export const Backend = ({ stack }: StackContext) => {
     cdk: {
       queue: {
         fifo: true,
+        deadLetterQueue: {
+          queue: deadLetterQueue.cdk.queue,
+          maxReceiveCount: 3,
+        },
       },
     },
   });
@@ -137,19 +149,19 @@ export const Backend = ({ stack }: StackContext) => {
       'POST /questions/{questionId}/answers': {
         function: {
           handler: 'packages/functions/src/commands.answerQuestion',
-          bind: [editQuestionQueue],
+          bind: [editQuestionQueue, eventsTable],
         },
       },
       'POST /questions/{questionId}/answers/{answerId}/upVote': {
         function: {
           handler: 'packages/functions/src/commands.upVoteAnswer',
-          bind: [editQuestionQueue],
+          bind: [editQuestionQueue, eventsTable],
         },
       },
       'POST /questions/{questionId}/answers/{answerId}/downVote': {
         function: {
           handler: 'packages/functions/src/commands.downVoteAnswer',
-          bind: [editQuestionQueue],
+          bind: [editQuestionQueue, eventsTable],
         },
       },
       'GET /questions': {

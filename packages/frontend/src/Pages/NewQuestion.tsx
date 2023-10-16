@@ -5,7 +5,10 @@ import {
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useConnectedUser } from '../connectedUserContext';
-import { ListQuestionsOutput } from '@rugbewise/contracts/entities';
+import {
+  GetQuestionOutput,
+  ListQuestionsOutput,
+} from '@rugbewise/contracts/entities';
 import { useNavigate } from 'react-router-dom';
 
 const GAMES = ['🇫🇷 vs 🇿🇦', '🏴󠁧󠁢󠁷󠁬󠁳󠁿 vs 🇦🇷', '🇳🇿 vs 🇮🇪', '🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇫🇯'];
@@ -55,6 +58,15 @@ export const NewQuestion = () => {
           'questions',
           old => [newQuestion, ...(old ?? [])],
         );
+        await queryClient.cancelQueries({
+          queryKey: ['questions', questionId],
+        });
+        queryClient.setQueryData<GetQuestionOutput>(['questions', questionId], {
+          questionId,
+          questionText,
+          answers: {},
+          userId,
+        });
 
         navigate('/');
       },

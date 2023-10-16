@@ -25,7 +25,7 @@ export type AnswerQuestionInput = {
 };
 
 export type AnswerQuestionOutput = {
-  message: string;
+  answerId: string;
 };
 
 export type UpVoteAnswerPathParameters = {

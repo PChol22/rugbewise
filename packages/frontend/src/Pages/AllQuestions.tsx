@@ -26,7 +26,7 @@ export const AllQuestions = () => {
   if (isLoading || questions === undefined) return <Loader />;
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center mb-4 gap-12">
         <h1 className="text-3xl text-palette-primary">All Questions</h1>
         <button

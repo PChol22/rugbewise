@@ -72,12 +72,15 @@ export const answerQuestion = ApiHandler(async _evt => {
     _evt.body as string,
   ) as AnswerQuestionInput;
 
+  const answerId = generateUuid();
+
   const queuePayload: QueueEvent = {
     type: 'QuestionAnswered',
     payload: {
       userId,
       answerText,
       questionId,
+      answerId,
     },
   };
 
@@ -91,7 +94,7 @@ export const answerQuestion = ApiHandler(async _evt => {
   );
 
   const response: AnswerQuestionOutput = {
-    message: 'Question answered',
+    answerId,
   };
 
   return {
@@ -175,13 +178,10 @@ export const editQuestion = async (evt: SQSEvent) => {
 
       switch (parsedBody.type) {
         case 'QuestionAnswered': {
-          return await answerQuestionCommand.handler(
-            parsedBody.payload,
-            [questionsEventStore, usersEventStore],
-            {
-              generateUuid,
-            },
-          );
+          return await answerQuestionCommand.handler(parsedBody.payload, [
+            questionsEventStore,
+            usersEventStore,
+          ]);
         }
         case 'AnswerUpVoted': {
           return await upVoteAnswerCommand.handler(parsedBody.payload, [

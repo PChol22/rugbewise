@@ -1,6 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './Layout';
-import { AllQuestions, Leaderboard, Login, NewQuestion } from './Pages';
+import {
+  AllQuestions,
+  Leaderboard,
+  Login,
+  NewQuestion,
+  QuestionDetails,
+} from './Pages';
 import { useContext } from 'react';
 import { connectedUserContext } from './connectedUserContext';
 import { Navigate, Outlet } from 'react-router-dom';
@@ -40,6 +46,14 @@ export const Router = () => (
           element={
             <Layout>
               <NewQuestion />
+            </Layout>
+          }
+        />
+        <Route
+          path="/question/:questionId"
+          element={
+            <Layout>
+              <QuestionDetails />
             </Layout>
           }
         />

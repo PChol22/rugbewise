@@ -5,6 +5,7 @@ import {
   QuestionForDetailsEntityType,
   UserEntity,
   UserEntityName,
+  QuestionForDetailsEntityName,
 } from '@rugbewise/core/entities';
 import { ApiHandler } from 'sst/node/api';
 import {
@@ -38,7 +39,7 @@ export const getQuestion = ApiHandler(async ({ pathParameters }) => {
 
   const { Item: question } =
     await QuestionForDetailsEntity.get<QuestionForDetailsEntityType>({
-      PK: QuestionForListEntityName,
+      PK: QuestionForDetailsEntityName,
       SK: questionId,
     });
 
