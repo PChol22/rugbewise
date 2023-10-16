@@ -3,7 +3,6 @@ import { ApiHandler } from 'sst/node/api';
 import {
   answerQuestionCommand,
   createQuestionCommand,
-  createUserCommand,
   downVoteAnswerCommand,
   upVoteAnswerCommand,
 } from '@rugbewise/core/commands';
@@ -16,8 +15,6 @@ import {
   AnswerQuestionOutput,
   CreateQuestionInput,
   CreateQuestionOutput,
-  CreateUserInput,
-  CreateUserOutput,
   DownVoteAnswerPathParameters,
   DownVoteAnswerInput,
   DownVoteAnswerOutput,
@@ -28,8 +25,6 @@ import {
 import { questionsEventStore } from '@rugbewise/core/questionsEventStore';
 import { SQSEvent } from 'aws-lambda';
 import { Queue } from 'sst/node/queue';
-import { UserEntity, UserEntityName } from '@rugbewise/core/entities';
-import { GSI1 } from '../../../constants';
 
 const generateUuid = () => randomUUID();
 const sqsClient = new SQSClient({});
@@ -47,40 +42,6 @@ type QueueEvent =
       type: 'AnswerDownVoted';
       payload: Parameters<typeof downVoteAnswerCommand.handler>[0];
     };
-
-export const createUser = ApiHandler(async _evt => {
-  const { username } = JSON.parse(_evt.body as string) as CreateUserInput;
-
-  const { Items: users = [] } = await UserEntity.query(UserEntityName, {
-    eq: username,
-    index: GSI1,
-  });
-
-  // TODO: Do not use read-model to check if user exists
-  if (users.length > 0) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'User already exists' }),
-    };
-  }
-
-  const { userId } = await createUserCommand.handler(
-    { username },
-    [usersEventStore],
-    {
-      generateUuid,
-    },
-  );
-
-  const response: CreateUserOutput = {
-    userId,
-  };
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify(response),
-  };
-});
 
 export const createQuestion = ApiHandler(async _evt => {
   const { userId, questionText } = JSON.parse(

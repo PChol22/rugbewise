@@ -25,9 +25,9 @@ export const Login = () => {
   const { mutate: performSignIn } = useMutation<
     CreateUserOutput,
     unknown,
-    { username: string; email: string }
+    CreateUserInput
   >(
-    async (body: CreateUserInput) => {
+    async body => {
       const response = await fetch(
         `${import.meta.env.VITE_APP_API_URL}/users`,
         {
@@ -40,7 +40,7 @@ export const Login = () => {
       );
       const { status } = response;
 
-      if (status !== 201) throw new Error('Failed to create user');
+      if (status !== 200) throw new Error('Failed to create user');
 
       const data = (await response.json()) as CreateUserOutput;
       return data;
@@ -62,7 +62,7 @@ export const Login = () => {
     unknown,
     LoginInput
   >(
-    async (body: LoginInput) => {
+    async body => {
       const response = await fetch(
         `${import.meta.env.VITE_APP_API_URL}/login`,
         {
@@ -125,7 +125,7 @@ export const Login = () => {
             <button
               className="btn btn-primary px-2 py-1 bg-palette-secondary rounded-sm text-white"
               onClick={() => {
-                performSignIn({ username: signInUsername, email: signInEmail });
+                performSignIn({ username: signInUsername });
               }}
             >
               Sign in

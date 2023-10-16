@@ -124,7 +124,7 @@ export const Backend = ({ stack }: StackContext) => {
     routes: {
       'POST /users': {
         function: {
-          handler: 'packages/functions/src/commands.createUser',
+          handler: 'packages/functions/src/signin.createUser',
           bind: [eventsTable, projectionsTable],
         },
       },

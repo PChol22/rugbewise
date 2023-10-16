@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './Layout';
-import { Home, Leaderboard, Login } from './Pages';
+import { AllQuestions, Leaderboard, Login, NewQuestion } from './Pages';
 import { useContext } from 'react';
 import { connectedUserContext } from './connectedUserContext';
 import { Navigate, Outlet } from 'react-router-dom';
@@ -36,10 +36,18 @@ export const Router = () => (
           }
         />
         <Route
+          path="/newQuestion"
+          element={
+            <Layout>
+              <NewQuestion />
+            </Layout>
+          }
+        />
+        <Route
           path="/"
           element={
             <Layout>
-              <Home />
+              <AllQuestions />
             </Layout>
           }
         />

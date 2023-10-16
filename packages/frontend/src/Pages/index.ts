@@ -1,3 +1,4 @@
 export * from './Leaderboard';
 export * from './Login';
-export * from './Home';
+export * from './AllQuestions';
+export * from './NewQuestion';
