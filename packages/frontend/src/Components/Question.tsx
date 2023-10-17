@@ -6,6 +6,7 @@ interface Props {
   username: string;
   fileSignedUrl?: string;
   createdAt: string;
+  game: string;
 }
 
 export const Question = ({
@@ -14,6 +15,7 @@ export const Question = ({
   username,
   fileSignedUrl,
   createdAt,
+  game,
 }: Props) => {
   const navigate = useNavigate();
 
@@ -23,9 +25,12 @@ export const Question = ({
       className="flex flex-col w-300px h-max p-2 border-solid border-2 border-palette-secondary rounded-md bg-white cursor-pointer hover:bg-gray-200"
       onClick={() => navigate(`/question/${questionId}`)}
     >
-      <p className="text-sm text-gray-600 mb-2">
-        <b>{username}</b> {new Date(createdAt).toLocaleString()}
-      </p>
+      <div className="flex justify-between mb-2">
+        <p className="text-sm text-gray-600">
+          <b>{username}</b> {new Date(createdAt).toLocaleString()}
+        </p>
+        <p className="text-sm text-gray-600">{game}</p>
+      </div>
       <p className="text-md">{questionText}</p>
       {fileSignedUrl && (
         <div className="mt-4">

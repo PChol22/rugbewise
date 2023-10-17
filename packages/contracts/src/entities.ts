@@ -6,6 +6,7 @@ export type ListQuestionsOutput = {
     userId: string;
     username: string;
     createdAt: string;
+    game: string;
   }[];
 };
 
@@ -30,6 +31,7 @@ export type GetQuestionOutput = {
   signedUrl?: string;
   username: string;
   createdAt: string;
+  game: string;
 };
 
 export type ListUsersInput = {};

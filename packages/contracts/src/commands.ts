@@ -10,6 +10,7 @@ export type CreateQuestionInput = {
   userId: string;
   questionText: string;
   fileKey?: string;
+  game: string;
 };
 
 export type CreateQuestionOutput = {

@@ -48,12 +48,18 @@ type QueueEvent =
     };
 
 export const createQuestion = ApiHandler(async _evt => {
-  const { userId, questionText, fileKey } = JSON.parse(
+  const { userId, questionText, fileKey, game } = JSON.parse(
     _evt.body as string,
   ) as CreateQuestionInput;
 
   const { questionId } = await createQuestionCommand.handler(
-    { userId, questionText, fileKey, createdAt: new Date().toISOString() },
+    {
+      userId,
+      questionText,
+      fileKey,
+      createdAt: new Date().toISOString(),
+      game,
+    },
     [questionsEventStore, usersEventStore],
     {
       generateUuid,

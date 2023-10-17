@@ -35,15 +35,18 @@ export const AllQuestions = () => {
           Ask a question
         </button>
       </div>
-      {questions.map(({ questionId, questionText, username, createdAt }) => (
-        <Question
-          key={questionId}
-          questionId={questionId}
-          questionText={questionText}
-          username={username}
-          createdAt={createdAt}
-        />
-      ))}
+      {questions.map(
+        ({ questionId, questionText, username, createdAt, game }) => (
+          <Question
+            key={questionId}
+            questionId={questionId}
+            questionText={questionText}
+            username={username}
+            createdAt={createdAt}
+            game={game}
+          />
+        ),
+      )}
     </div>
   );
 };

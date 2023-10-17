@@ -106,6 +106,7 @@ export const QuestionDetails = () => {
         questionId={questionId}
         fileSignedUrl={question.signedUrl}
         createdAt={question.createdAt}
+        game={question.game}
       />
       <div className="flex flex-col items-start mb-2">
         <label className="block mb-2 text-gray-700">Answer the question</label>

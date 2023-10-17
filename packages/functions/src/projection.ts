@@ -38,6 +38,7 @@ export const questionsProjection = async ({
     fileKey,
     username,
     createdAt,
+    game,
   } = detail.aggregate;
 
   await Promise.all([
@@ -47,6 +48,7 @@ export const questionsProjection = async ({
       userId,
       username,
       createdAt,
+      game,
     }),
     QuestionForDetailsEntity.put<PutQuestionForDetailsEntityType>({
       questionId,
@@ -56,6 +58,7 @@ export const questionsProjection = async ({
       fileKey,
       username,
       createdAt,
+      game,
     }),
   ]);
 };

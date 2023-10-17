@@ -89,6 +89,7 @@ export const NewQuestion = () => {
           userId,
           username,
           createdAt: new Date().toISOString(),
+          game,
         };
 
         await queryClient.cancelQueries({ queryKey: 'questions' });
@@ -107,6 +108,7 @@ export const NewQuestion = () => {
           signedUrl: fileSignedUrl,
           username,
           createdAt: new Date().toISOString(),
+          game,
         });
 
         navigate('/');
@@ -119,7 +121,7 @@ export const NewQuestion = () => {
       <form
         className="p-8 bg-white shadow-md rounded-md"
         onSubmit={e => {
-          mutate({ userId, questionText });
+          mutate({ userId, questionText, game });
           e.preventDefault();
         }}
       >

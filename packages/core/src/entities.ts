@@ -69,10 +69,9 @@ export const QuestionForListEntity = new Entity({
     questionId: { type: 'string', required: true },
     userId: { type: 'string', required: true },
     questionText: { type: 'string', required: true },
-    // game: { type: 'map', required: true },
-    // gameTime: { type: 'string', required: true },
     username: { type: 'string', required: true },
     createdAt: { type: 'string', required: true },
+    game: { type: 'string', required: true },
   },
 });
 
@@ -102,12 +101,11 @@ export const QuestionForDetailsEntity = new Entity({
     questionId: { type: 'string', required: true },
     userId: { type: 'string', required: true },
     questionText: { type: 'string', required: true },
-    // game: { type: 'map', required: true },
-    // gameTime: { type: 'string', required: true },
     answers: { type: 'map', required: true },
     fileKey: { type: 'string' },
     username: { type: 'string', required: true },
     createdAt: { type: 'string', required: true },
+    game: { type: 'string', required: true },
   },
 });
 

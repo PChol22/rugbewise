@@ -11,11 +11,12 @@ export const createQuestionCommand = new Command({
       userId: string;
       fileKey?: string;
       createdAt: string;
+      game: string;
     },
     [questionsEventStore, usersEventStore],
     { generateUuid }: { generateUuid: () => string },
   ): Promise<{ questionId: string }> => {
-    const { questionText, userId, fileKey, createdAt } = commandInput;
+    const { questionText, userId, fileKey, createdAt, game } = commandInput;
     const questionId = generateUuid();
 
     const { aggregate: userAggregate } = await usersEventStore.getAggregate(
@@ -36,6 +37,7 @@ export const createQuestionCommand = new Command({
         fileKey,
         username: userAggregate.username,
         createdAt,
+        game,
       },
     });
 
