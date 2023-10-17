@@ -9,7 +9,7 @@
     "deploy": "sst deploy --stage prod",
     "remove": "sst remove",
     "console": "sst console",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && pnpm -r typecheck"
   },
   "devDependencies": {
     "sst": "^2.29.2",
