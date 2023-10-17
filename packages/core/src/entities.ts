@@ -71,6 +71,8 @@ export const QuestionForListEntity = new Entity({
     questionText: { type: 'string', required: true },
     // game: { type: 'map', required: true },
     // gameTime: { type: 'string', required: true },
+    username: { type: 'string', required: true },
+    createdAt: { type: 'string', required: true },
   },
 });
 
@@ -104,6 +106,8 @@ export const QuestionForDetailsEntity = new Entity({
     // gameTime: { type: 'string', required: true },
     answers: { type: 'map', required: true },
     fileKey: { type: 'string' },
+    username: { type: 'string', required: true },
+    createdAt: { type: 'string', required: true },
   },
 });
 
@@ -117,6 +121,8 @@ export type QuestionForDetailsEntityType = Omit<
       answerText: string;
       upVotes: string[];
       downVotes: string[];
+      username: string;
+      createdAt: string;
     };
   };
 };

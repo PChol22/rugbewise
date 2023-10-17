@@ -10,20 +10,22 @@ import { GetQuestionOutput } from '@rugbewise/contracts/entities';
 
 interface Props {
   answerId: string;
-  userId: string;
+  username: string;
   answerText: string;
   questionId: string;
   upVotes: string[];
   downVotes: string[];
+  createdAt: string;
 }
 
 export const Answer = ({
-  userId: answerUserId,
+  username,
   answerText,
   upVotes,
   downVotes,
   answerId,
   questionId,
+  createdAt,
 }: Props) => {
   const { userId } = useConnectedUser();
   const queryClient = useQueryClient();
@@ -136,7 +138,9 @@ export const Answer = ({
 
   return (
     <div className="flex flex-col w-300px h-max p-2 border-solid border-2 border-palette-primary rounded-md bg-white">
-      <p className="text-sm text-gray-600 mb-2">{answerUserId}</p>
+      <p className="text-sm text-gray-600 mb-2">
+        <b>{username}</b> {new Date(createdAt).toLocaleString()}
+      </p>
       <p className="text-md">{answerText}</p>
       <div className="self-end flex gap-1">
         <button

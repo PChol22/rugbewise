@@ -15,7 +15,6 @@ export const AllQuestions = () => {
         `${import.meta.env.VITE_APP_API_URL}/questions`,
       );
       const { questions } = (await response.json()) as ListQuestionsOutput;
-
       return questions;
     },
     { staleTime: 1000 * 60 },
@@ -36,12 +35,13 @@ export const AllQuestions = () => {
           Ask a question
         </button>
       </div>
-      {questions.map(({ questionId, questionText, userId }) => (
+      {questions.map(({ questionId, questionText, username, createdAt }) => (
         <Question
           key={questionId}
           questionId={questionId}
           questionText={questionText}
-          userId={userId}
+          username={username}
+          createdAt={createdAt}
         />
       ))}
     </div>

@@ -18,19 +18,35 @@ export interface QuestionAggregate extends Aggregate {
       answerText: string;
       upVotes: string[];
       downVotes: string[];
+      username: string;
+      createdAt: string;
     };
   };
   fileKey?: string;
+  username: string;
+  createdAt: string;
 }
 
 const questionCreatedEventType = new EventType<
   'QuestionCreated',
-  { userId: string; questionText: string; fileKey?: string }
+  {
+    userId: string;
+    questionText: string;
+    fileKey?: string;
+    username: string;
+    createdAt: string;
+  }
 >({ type: 'QuestionCreated' });
 
 const questionAnsweredEventType = new EventType<
   'QuestionAnswered',
-  { userId: string; answerText: string; answerId: string }
+  {
+    userId: string;
+    answerText: string;
+    answerId: string;
+    username: string;
+    createdAt: string;
+  }
 >({ type: 'QuestionAnswered' });
 
 const answerUpVotedEventType = new EventType<
@@ -57,7 +73,8 @@ const reduce: Reducer<QuestionAggregate, EventsTypes> = (aggregate, event) => {
 
   switch (event.type) {
     case 'QuestionCreated': {
-      const { userId, questionText, fileKey } = event.payload;
+      const { userId, questionText, fileKey, username, createdAt } =
+        event.payload;
       return {
         aggregateId,
         version,
@@ -65,10 +82,13 @@ const reduce: Reducer<QuestionAggregate, EventsTypes> = (aggregate, event) => {
         questionText,
         fileKey,
         answers: {},
+        username,
+        createdAt,
       };
     }
     case 'QuestionAnswered': {
-      const { answerText, answerId, userId } = event.payload;
+      const { answerText, answerId, userId, username, createdAt } =
+        event.payload;
       return {
         ...aggregate,
         version,
@@ -79,6 +99,8 @@ const reduce: Reducer<QuestionAggregate, EventsTypes> = (aggregate, event) => {
             answerText,
             upVotes: [],
             downVotes: [],
+            username,
+            createdAt,
           },
         },
       };

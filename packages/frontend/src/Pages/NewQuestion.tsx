@@ -41,7 +41,7 @@ export const NewQuestion = () => {
   const [questionText, setQuestionText] = useState('');
   const [game, setGame] = useState(GAMES[0]);
   const [file, setFile] = useState<File | null>(null);
-  const { userId } = useConnectedUser();
+  const { userId, username } = useConnectedUser();
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -87,6 +87,8 @@ export const NewQuestion = () => {
           questionId,
           questionText,
           userId,
+          username,
+          createdAt: new Date().toISOString(),
         };
 
         await queryClient.cancelQueries({ queryKey: 'questions' });
@@ -103,6 +105,8 @@ export const NewQuestion = () => {
           answers: {},
           userId,
           signedUrl: fileSignedUrl,
+          username,
+          createdAt: new Date().toISOString(),
         });
 
         navigate('/');

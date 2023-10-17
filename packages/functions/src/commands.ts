@@ -53,7 +53,7 @@ export const createQuestion = ApiHandler(async _evt => {
   ) as CreateQuestionInput;
 
   const { questionId } = await createQuestionCommand.handler(
-    { userId, questionText, fileKey },
+    { userId, questionText, fileKey, createdAt: new Date().toISOString() },
     [questionsEventStore, usersEventStore],
     {
       generateUuid,
@@ -95,6 +95,7 @@ export const answerQuestion = ApiHandler(async _evt => {
       answerText,
       questionId,
       answerId,
+      createdAt: new Date().toISOString(),
     },
   };
 

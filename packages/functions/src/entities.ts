@@ -26,11 +26,15 @@ export const listQuestions = ApiHandler(async () => {
   );
 
   const response: ListQuestionsOutput = {
-    questions: questions.map(({ questionId, questionText, userId }) => ({
-      questionId,
-      questionText,
-      userId,
-    })),
+    questions: questions.map(
+      ({ questionId, questionText, userId, username, createdAt }) => ({
+        questionId,
+        questionText,
+        userId,
+        username,
+        createdAt,
+      }),
+    ),
   };
 
   return {
@@ -73,6 +77,8 @@ export const getQuestion = ApiHandler(async ({ pathParameters }) => {
     userId: question.userId,
     answers: question.answers,
     signedUrl,
+    username: question.username,
+    createdAt: question.createdAt,
   };
 
   return {

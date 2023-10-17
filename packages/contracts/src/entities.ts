@@ -4,6 +4,8 @@ export type ListQuestionsOutput = {
     questionId: string;
     questionText: string;
     userId: string;
+    username: string;
+    createdAt: string;
   }[];
 };
 
@@ -21,9 +23,13 @@ export type GetQuestionOutput = {
       userId: string;
       upVotes: string[];
       downVotes: string[];
+      username: string;
+      createdAt: string;
     };
   };
   signedUrl?: string;
+  username: string;
+  createdAt: string;
 };
 
 export type ListUsersInput = {};

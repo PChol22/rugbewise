@@ -20,7 +20,7 @@ export const QuestionDetails = () => {
   if (questionId === undefined) throw new Error('questionId is undefined');
 
   const [answerText, setAnswerText] = useState('');
-  const { userId } = useConnectedUser();
+  const { userId, username } = useConnectedUser();
   const queryClient = useQueryClient();
 
   const {
@@ -84,6 +84,8 @@ export const QuestionDetails = () => {
               downVotes: [],
               userId,
               answerText,
+              username,
+              createdAt: new Date().toISOString(),
             },
             ...oldQuestion.answers,
           },
@@ -99,10 +101,11 @@ export const QuestionDetails = () => {
   return (
     <div className="flex flex-col gap-2">
       <Question
-        userId={question.userId}
+        username={question.username}
         questionText={question.questionText}
         questionId={questionId}
         fileSignedUrl={question.signedUrl}
+        createdAt={question.createdAt}
       />
       <div className="flex flex-col items-start mb-2">
         <label className="block mb-2 text-gray-700">Answer the question</label>
@@ -127,10 +130,11 @@ export const QuestionDetails = () => {
           answerId={answerId}
           questionId={questionId}
           answerText={answer.answerText}
-          userId={answer.userId}
+          username={answer.username}
           upVotes={answer.upVotes}
           downVotes={answer.downVotes}
           key={answerId}
+          createdAt={answer.createdAt}
         />
       ))}
     </div>

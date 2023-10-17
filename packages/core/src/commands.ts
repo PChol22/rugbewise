@@ -6,11 +6,16 @@ export const createQuestionCommand = new Command({
   commandId: 'CreateQuestion',
   requiredEventStores: tuple(questionsEventStore, usersEventStore),
   handler: async (
-    commandInput: { questionText: string; userId: string; fileKey?: string },
+    commandInput: {
+      questionText: string;
+      userId: string;
+      fileKey?: string;
+      createdAt: string;
+    },
     [questionsEventStore, usersEventStore],
     { generateUuid }: { generateUuid: () => string },
   ): Promise<{ questionId: string }> => {
-    const { questionText, userId, fileKey } = commandInput;
+    const { questionText, userId, fileKey, createdAt } = commandInput;
     const questionId = generateUuid();
 
     const { aggregate: userAggregate } = await usersEventStore.getAggregate(
@@ -25,7 +30,13 @@ export const createQuestionCommand = new Command({
       aggregateId: questionId,
       version: 1,
       type: 'QuestionCreated',
-      payload: { questionText, userId, fileKey },
+      payload: {
+        questionText,
+        userId,
+        fileKey,
+        username: userAggregate.username,
+        createdAt,
+      },
     });
 
     return { questionId };
@@ -41,10 +52,12 @@ export const answerQuestionCommand = new Command({
       answerText: string;
       userId: string;
       answerId: string;
+      createdAt: string;
     },
     [questionsEventStore, usersEventStore],
   ): Promise<{ answerId: string }> => {
-    const { questionId, answerText, userId, answerId } = commandInput;
+    const { questionId, answerText, userId, answerId, createdAt } =
+      commandInput;
 
     const [{ aggregate: questionAggregate }, { aggregate: userAggregate }] =
       await Promise.all([
@@ -64,7 +77,13 @@ export const answerQuestionCommand = new Command({
       aggregateId: questionId,
       version: questionAggregate.version + 1,
       type: 'QuestionAnswered',
-      payload: { answerId, answerText, userId },
+      payload: {
+        answerId,
+        answerText,
+        userId,
+        username: userAggregate.username,
+        createdAt,
+      },
     });
 
     return { answerId };
