@@ -102,6 +102,7 @@ export const QuestionDetails = () => {
         userId={question.userId}
         questionText={question.questionText}
         questionId={questionId}
+        fileSignedUrl={question.signedUrl}
       />
       <div className="flex flex-col items-start mb-2">
         <label className="block mb-2 text-gray-700">Answer the question</label>

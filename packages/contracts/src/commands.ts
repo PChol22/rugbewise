@@ -9,10 +9,12 @@ export type CreateUserOutput = {
 export type CreateQuestionInput = {
   userId: string;
   questionText: string;
+  fileKey?: string;
 };
 
 export type CreateQuestionOutput = {
   questionId: string;
+  fileSignedUrl?: string;
 };
 
 export type AnswerQuestionPathParameters = {

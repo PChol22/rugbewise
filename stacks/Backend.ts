@@ -146,7 +146,7 @@ export const Backend = ({ stack }: StackContext) => {
       'POST /questions': {
         function: {
           handler: 'packages/functions/src/commands.createQuestion',
-          bind: [eventsTable],
+          bind: [eventsTable, mediaBucket],
         },
       },
       'POST /questions/{questionId}/answers': {
@@ -176,7 +176,7 @@ export const Backend = ({ stack }: StackContext) => {
       'GET /questions/{questionId}': {
         function: {
           handler: 'packages/functions/src/entities.getQuestion',
-          bind: [projectionsTable],
+          bind: [projectionsTable, mediaBucket],
         },
       },
       'GET /users': {

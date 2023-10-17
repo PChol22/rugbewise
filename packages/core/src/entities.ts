@@ -102,8 +102,8 @@ export const QuestionForDetailsEntity = new Entity({
     questionText: { type: 'string', required: true },
     // game: { type: 'map', required: true },
     // gameTime: { type: 'string', required: true },
-    // filename: { type: 'string' },
     answers: { type: 'map', required: true },
+    fileKey: { type: 'string' },
   },
 });
 

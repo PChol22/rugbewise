@@ -4,9 +4,15 @@ interface Props {
   questionId: string;
   questionText: string;
   userId: string;
+  fileSignedUrl?: string;
 }
 
-export const Question = ({ questionId, questionText, userId }: Props) => {
+export const Question = ({
+  questionId,
+  questionText,
+  userId,
+  fileSignedUrl,
+}: Props) => {
   const navigate = useNavigate();
 
   return (
@@ -17,6 +23,35 @@ export const Question = ({ questionId, questionText, userId }: Props) => {
     >
       <p className="text-sm text-gray-600 mb-2">{userId}</p>
       <p className="text-md">{questionText}</p>
+      {fileSignedUrl && (
+        <div className="mt-4">
+          <h3 className="mb-2 text-sm text-gray-600">Video</h3>
+          <div className="video-container border border-gray-300 rounded overflow-hidden shadow-lg">
+            <video width="320" height="240" controls autoPlay loop muted>
+              <source src={fileSignedUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      )}
+      {/* @ts-expect-error jsx tag not typed correctly */}
+      <style jsx="true">
+        {`
+          .video-container {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+            box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+          }
+          video {
+            display: block;
+            width: 100%;
+            height: auto;
+          }
+        `}
+      </style>
     </div>
   );
 };

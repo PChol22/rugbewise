@@ -14,6 +14,11 @@ import {
   ListQuestionsOutput,
   ListUsersOutput,
 } from '@rugbewise/contracts/entities';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { Bucket } from 'sst/node/bucket';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+const s3Client = new S3Client({});
 
 export const listQuestions = ApiHandler(async () => {
   const { Items: questions = [] } = await QuestionForListEntity.query(
@@ -52,11 +57,22 @@ export const getQuestion = ApiHandler(async ({ pathParameters }) => {
     };
   }
 
+  let signedUrl: string | undefined = undefined;
+  if (question.fileKey !== undefined) {
+    const command = new GetObjectCommand({
+      Bucket: Bucket.mediaBucket.bucketName,
+      Key: question.fileKey,
+    });
+
+    signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 });
+  }
+
   const response: GetQuestionOutput = {
     questionId,
     questionText: question.questionText,
     userId: question.userId,
     answers: question.answers,
+    signedUrl,
   };
 
   return {

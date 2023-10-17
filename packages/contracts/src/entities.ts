@@ -23,6 +23,7 @@ export type GetQuestionOutput = {
       downVotes: string[];
     };
   };
+  signedUrl?: string;
 };
 
 export type ListUsersInput = {};

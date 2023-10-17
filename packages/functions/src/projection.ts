@@ -35,6 +35,7 @@ export const questionsProjection = async ({
     questionText,
     userId,
     answers,
+    fileKey,
   } = detail.aggregate;
 
   await Promise.all([
@@ -48,6 +49,7 @@ export const questionsProjection = async ({
       questionText,
       userId,
       answers,
+      fileKey,
     }),
   ]);
 };

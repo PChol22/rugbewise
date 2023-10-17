@@ -6,11 +6,11 @@ export const createQuestionCommand = new Command({
   commandId: 'CreateQuestion',
   requiredEventStores: tuple(questionsEventStore, usersEventStore),
   handler: async (
-    commandInput: { questionText: string; userId: string },
+    commandInput: { questionText: string; userId: string; fileKey?: string },
     [questionsEventStore, usersEventStore],
     { generateUuid }: { generateUuid: () => string },
   ): Promise<{ questionId: string }> => {
-    const { questionText, userId } = commandInput;
+    const { questionText, userId, fileKey } = commandInput;
     const questionId = generateUuid();
 
     const { aggregate: userAggregate } = await usersEventStore.getAggregate(
@@ -25,7 +25,7 @@ export const createQuestionCommand = new Command({
       aggregateId: questionId,
       version: 1,
       type: 'QuestionCreated',
-      payload: { questionText, userId },
+      payload: { questionText, userId, fileKey },
     });
 
     return { questionId };

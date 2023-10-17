@@ -20,11 +20,12 @@ export interface QuestionAggregate extends Aggregate {
       downVotes: string[];
     };
   };
+  fileKey?: string;
 }
 
 const questionCreatedEventType = new EventType<
   'QuestionCreated',
-  { userId: string; questionText: string }
+  { userId: string; questionText: string; fileKey?: string }
 >({ type: 'QuestionCreated' });
 
 const questionAnsweredEventType = new EventType<
@@ -56,12 +57,13 @@ const reduce: Reducer<QuestionAggregate, EventsTypes> = (aggregate, event) => {
 
   switch (event.type) {
     case 'QuestionCreated': {
-      const { userId, questionText } = event.payload;
+      const { userId, questionText, fileKey } = event.payload;
       return {
         aggregateId,
         version,
         userId,
         questionText,
+        fileKey,
         answers: {},
       };
     }

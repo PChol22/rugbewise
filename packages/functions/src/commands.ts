@@ -25,9 +25,13 @@ import {
 import { questionsEventStore } from '@rugbewise/core/questionsEventStore';
 import { SQSEvent } from 'aws-lambda';
 import { Queue } from 'sst/node/queue';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Bucket } from 'sst/node/bucket';
 
 const generateUuid = () => randomUUID();
 const sqsClient = new SQSClient({});
+const s3Client = new S3Client({});
 
 type QueueEvent =
   | {
@@ -44,20 +48,30 @@ type QueueEvent =
     };
 
 export const createQuestion = ApiHandler(async _evt => {
-  const { userId, questionText } = JSON.parse(
+  const { userId, questionText, fileKey } = JSON.parse(
     _evt.body as string,
   ) as CreateQuestionInput;
 
   const { questionId } = await createQuestionCommand.handler(
-    { userId, questionText },
+    { userId, questionText, fileKey },
     [questionsEventStore, usersEventStore],
     {
       generateUuid,
     },
   );
 
+  let fileSignedUrl: string | undefined;
+  if (fileKey) {
+    const command = new GetObjectCommand({
+      Bucket: Bucket.mediaBucket.bucketName,
+      Key: fileKey,
+    });
+    fileSignedUrl = await getSignedUrl(s3Client, command, { expiresIn: 60 });
+  }
+
   const response: CreateQuestionOutput = {
     questionId,
+    fileSignedUrl,
   };
 
   return {

@@ -58,7 +58,6 @@ export const NewQuestion = () => {
         const response = await getUploadUrl();
         await uploadVideoToS3(file, response.uploadUrl);
         fileKey = response.fileKey;
-        console.log(fileKey);
       }
 
       const response = await fetch(
@@ -68,7 +67,10 @@ export const NewQuestion = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify({
+            ...body,
+            fileKey,
+          }),
         },
       );
       const { status } = response;
@@ -80,7 +82,7 @@ export const NewQuestion = () => {
       return data;
     },
     {
-      onSuccess: async ({ questionId }) => {
+      onSuccess: async ({ questionId, fileSignedUrl }) => {
         const newQuestion: ListQuestionsOutput['questions'][number] = {
           questionId,
           questionText,
@@ -100,6 +102,7 @@ export const NewQuestion = () => {
           questionText,
           answers: {},
           userId,
+          signedUrl: fileSignedUrl,
         });
 
         navigate('/');
