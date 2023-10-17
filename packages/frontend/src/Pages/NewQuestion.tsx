@@ -10,12 +10,37 @@ import {
   ListQuestionsOutput,
 } from '@rugbewise/contracts/entities';
 import { useNavigate } from 'react-router-dom';
+import { FileUpload } from '../Components';
+import { GetUploadUrlOutput } from '@rugbewise/contracts/medias';
 
 const GAMES = ['🇫🇷 vs 🇿🇦', '🏴󠁧󠁢󠁷󠁬󠁳󠁿 vs 🇦🇷', '🇳🇿 vs 🇮🇪', '🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇫🇯'];
+
+const getUploadUrl = async () => {
+  const response = await fetch(
+    `${import.meta.env.VITE_APP_API_URL}/medias/upload-url`,
+    {
+      method: 'POST',
+    },
+  );
+  const { uploadUrl, fileKey } = (await response.json()) as GetUploadUrlOutput;
+
+  return { uploadUrl, fileKey };
+};
+
+const uploadVideoToS3 = async (file: File, uploadUrl: string) => {
+  await fetch(uploadUrl, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
+  });
+};
 
 export const NewQuestion = () => {
   const [questionText, setQuestionText] = useState('');
   const [game, setGame] = useState(GAMES[0]);
+  const [file, setFile] = useState<File | null>(null);
   const { userId } = useConnectedUser();
 
   const queryClient = useQueryClient();
@@ -27,6 +52,15 @@ export const NewQuestion = () => {
     CreateQuestionInput
   >(
     async body => {
+      let fileKey: string | undefined = undefined;
+
+      if (file !== null) {
+        const response = await getUploadUrl();
+        await uploadVideoToS3(file, response.uploadUrl);
+        fileKey = response.fileKey;
+        console.log(fileKey);
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_APP_API_URL}/questions`,
         {
@@ -108,6 +142,7 @@ export const NewQuestion = () => {
             ))}
           </select>
         </div>
+        <FileUpload file={file} setFile={setFile} />
         <button
           className="w-full py-2 bg-palette-secondary text-white rounded hover:bg-green-500"
           type="submit"

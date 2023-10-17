@@ -5,6 +5,7 @@ import {
   Table,
   EventBus,
   Queue,
+  Bucket,
 } from 'sst/constructs';
 import { BillingMode } from 'aws-cdk-lib/aws-dynamodb';
 import {
@@ -132,6 +133,8 @@ export const Backend = ({ stack }: StackContext) => {
     },
   });
 
+  const mediaBucket = new Bucket(stack, 'mediaBucket', {});
+
   const api = new Api(stack, 'api', {
     routes: {
       'POST /users': {
@@ -186,6 +189,12 @@ export const Backend = ({ stack }: StackContext) => {
         function: {
           handler: 'packages/functions/src/login.login',
           bind: [projectionsTable],
+        },
+      },
+      'POST /medias/upload-url': {
+        function: {
+          handler: 'packages/functions/src/medias.getUploadUrl',
+          bind: [mediaBucket],
         },
       },
     },
