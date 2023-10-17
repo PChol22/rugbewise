@@ -28,10 +28,10 @@ export const Leaderboard = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-center text-palette-primary">
+      <h1 className="text-2xl font-bold text-center text-palette-primary mb-4">
         Leaderboard
       </h1>
-      <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
+      <div className="flex flex-col items-center justify-center w-full h-full gap-2">
         {data?.map(({ userId, username, score }, index) => (
           <div
             key={userId}

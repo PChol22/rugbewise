@@ -4,6 +4,7 @@ import {
   AllQuestions,
   Leaderboard,
   Login,
+  MyQuestions,
   NewQuestion,
   QuestionDetails,
 } from './Pages';
@@ -54,6 +55,14 @@ export const Router = () => (
           element={
             <Layout>
               <QuestionDetails />
+            </Layout>
+          }
+        />
+        <Route
+          path="/myQuestions"
+          element={
+            <Layout>
+              <MyQuestions />
             </Layout>
           }
         />

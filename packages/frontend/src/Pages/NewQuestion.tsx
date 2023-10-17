@@ -97,6 +97,11 @@ export const NewQuestion = () => {
           'questions',
           old => [newQuestion, ...(old ?? [])],
         );
+        await queryClient.cancelQueries({ queryKey: ['questions', userId] });
+        queryClient.setQueryData<ListQuestionsOutput['questions']>(
+          ['questions', userId],
+          old => [newQuestion, ...(old ?? [])],
+        );
         await queryClient.cancelQueries({
           queryKey: ['questions', questionId],
         });

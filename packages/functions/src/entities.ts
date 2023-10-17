@@ -12,6 +12,7 @@ import {
   GetQuestionOutput,
   GetQuestionPathParameters,
   ListQuestionsOutput,
+  ListQuestionsQueryParameters,
   ListUsersOutput,
 } from '@rugbewise/contracts/entities';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
@@ -20,9 +21,15 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({});
 
-export const listQuestions = ApiHandler(async () => {
+export const listQuestions = ApiHandler(async _evt => {
+  const { userId } = (_evt.queryStringParameters ??
+    {}) as ListQuestionsQueryParameters;
+
   const { Items: questions = [] } = await QuestionForListEntity.query(
     QuestionForListEntityName,
+    {
+      ...(userId !== undefined ? { beginsWith: `${userId}#` } : {}),
+    },
   );
 
   const response: ListQuestionsOutput = {

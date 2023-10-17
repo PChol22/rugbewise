@@ -25,7 +25,7 @@ export const Question = ({
       className="flex flex-col w-300px h-max p-2 border-solid border-2 border-palette-secondary rounded-md bg-white cursor-pointer hover:bg-gray-200"
       onClick={() => navigate(`/question/${questionId}`)}
     >
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between mb-2 gap-4">
         <p className="text-sm text-gray-600">
           <b>{username}</b> {new Date(createdAt).toLocaleString()}
         </p>

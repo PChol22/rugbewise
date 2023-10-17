@@ -1,4 +1,7 @@
 export type ListQuestionsInput = {};
+export type ListQuestionsQueryParameters = {
+  userId: string;
+};
 export type ListQuestionsOutput = {
   questions: {
     questionId: string;

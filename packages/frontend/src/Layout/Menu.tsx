@@ -22,7 +22,12 @@ export const Menu = () => {
           >
             <span className="mr-2">👀</span> All Questions
           </button>
-          <button className="flex items-center mb-2">
+          <button
+            className="flex items-center mb-2"
+            onClick={() => {
+              navigate('/myQuestions');
+            }}
+          >
             <span className="mr-2">❓</span> My Questions
           </button>
           <button
