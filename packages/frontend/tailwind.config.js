@@ -15,7 +15,7 @@ export default {
         palette: {
           lighter: '#F5F3FF',
           light: '#DDD6FE',
-          primary: '#001F3F',
+          primary: '#2d76ff',
           secondary: '#2ECC71',
           danger: '#FF4136',
           accent: '#FFDC00',

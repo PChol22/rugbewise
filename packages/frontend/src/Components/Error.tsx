@@ -1,6 +1,6 @@
 export const Error = () => (
   <div className="flex flex-col items-center justify-center w-full h-full space-y-6">
-    <h1 className="text-2xl font-bold text-center text-palette-primary">
+    <h1 className="text-2xl font-semibold text-center">
       🙀 Oh no! We encountered an error! 🙀
     </h1>
     <button

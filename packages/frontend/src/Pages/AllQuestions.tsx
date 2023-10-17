@@ -27,7 +27,7 @@ export const AllQuestions = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center mb-4 gap-12">
-        <h1 className="text-3xl text-palette-primary">All Questions</h1>
+        <h1 className="text-3xl font-semibold">All Questions</h1>
         <button
           className="btn btn-primary bg-palette-secondary px-2 py-1 text-white rounded-sm"
           onClick={() => navigate('/newQuestion')}

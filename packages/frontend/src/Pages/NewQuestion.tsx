@@ -143,7 +143,7 @@ export const NewQuestion = () => {
           ></textarea>
         </div>
         <div className="mb-4">
-          <label className="block mb-2 text-gray-700">Match concerné</label>
+          <label className="block mb-2 text-gray-700">Game</label>
           <select
             className="w-full p-2 border rounded"
             onChange={e => setGame(e.target.value)}
